@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: react-agent-app
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
