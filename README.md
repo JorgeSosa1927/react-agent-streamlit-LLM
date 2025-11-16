@@ -103,12 +103,12 @@ You’ll see output like:
 
 ```mermaid
 graph TD
-  A[PlannerNode: generate LiteraturePlan] --> B{need_author_stats?}
-  B -- Yes --> C[AuthorStatsNode: mocked author stats]
-  B --> D[OpenAlexNode: fetch real papers - retry]
-  D --> E[WriterNode: summarize findings]
+  A[PlannerNode:<br>generate LiteraturePlan] --> B{need_author_stats?}
+  B -- Yes --> C[AuthorStatsNode:<br>mocked author stats]
+  B --> D[OpenAlexNode:<br>fetch real papers - retry]
+  D --> E[WriterNode:<br>summarize findings]
   C --> E
-  E --> F[Final Output: LiteratureSummary]
+  E --> F[Final Output:<br>LiteratureSummary]
 
 ```
 ---
