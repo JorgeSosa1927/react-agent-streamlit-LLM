@@ -100,6 +100,7 @@ You’ll see output like:
 ## Mermaid Graph Diagram
 
 ```mermaid
+
 graph TD
   A[PlannerNode: generate LiteraturePlan] --> B{need_author_stats?}
   B -- Yes --> C[AuthorStatsNode: mocked author stats]
@@ -108,7 +109,6 @@ graph TD
   C --> E
   E --> F[Final Output: LiteratureSummary]
 ```
-
 ---
 
 ## License
