@@ -1,66 +1,68 @@
-# Literature Review Assistant (LangGraph + LangChain)
+# ANLP2025 – Literature Review Agent (LangGraph + LangChain)
 
-This project implements a small but reliable LLM workflow using **LangGraph** and **LangChain**.
+This project is part of **Lab #1** for the **ANLP2025** course.  
+It implements a modular, multi-step LLM agent using **LangGraph** and **LangChain** to automate literature reviews.
 
 ---
 
-## What it does
+##  What it does
 
 Given a user query like:
 
 > “Give me a short overview of recent work on quantum computing.”
 
-The system:
+The system performs the following steps:
 
-* Extracts a structured research plan.
-* Searches for recent papers (via OpenAlex API).
-* Optionally analyzes author statistics.
-* Summarizes the findings using an LLM.
+1. Extracts a structured research plan.
+2. Searches for recent papers using the OpenAlex API.
+3. Optionally analyzes author statistics.
+4. Summarizes the findings using a Large Language Model (LLM).
 
-All results are returned as **structured JSON**.
-
----
-
-## Features
-
-* ReAct pattern (reason → act → observe)
-* LLM agents with clear roles (Planner, Writer)
-* LangGraph with branching and conditional nodes
-* Retry logic on API calls (OpenAlex)
-* Pydantic models for structured input/output
-* Parallel execution of tools when needed
+All results are returned as **structured JSON**, and a formatted version is shown in the Streamlit UI.
 
 ---
 
-## Project Structure
+##  Features
+
+- ✅ ReAct pattern (reason → act → observe)
+- ✅ LLM agents with clear modular roles (Planner, Writer, Formatter)
+- ✅ LangGraph graph structure with conditional routing
+- ✅ Retry logic for external API calls (OpenAlex)
+- ✅ Pydantic models for strict input/output validation
+- ✅ Streamlit UI for interactive exploration
+
+---
+
+##  Project Structure
 
 ```text
-react-agent/
+anlp2025-lab1-jorge-sosa/
 │
 ├── src/react_agent/
-│   ├── graph.py        # Main LangGraph pipeline
-│   ├── prompts.py      # LLM role prompts
-│   ├── tools.py        # Tool logic (OpenAlex API, author stats)
-│   ├── models.py       # Pydantic schemas
-│   ├── state.py        # LangGraph state definitions
-│   ├── context.py      # Model context (model name, API key, etc.)
-│   ├── utils.py        # Utilities (load_chat_model)
+│   ├── graph.py        # LangGraph pipeline logic
+│   ├── prompts.py      # LLM prompts for planner/writer/formatter
+│   ├── tools.py        # External tool integrations (OpenAlex, stats)
+│   ├── models.py       # Pydantic schemas for validation
+│   ├── state.py        # Graph state definitions
+│   ├── context.py      # Model context: keys, model type, etc.
+│   ├── utils.py        # Shared helpers (e.g., load_chat_model)
 │
 ├── tests/
-│   ├── test_graph.py   # Full end-to-end test
+│   └── test_graph.py   # Full end-to-end test
 │
-├── .env                # Optional: API keys
-├── requirements.txt    # Python dependencies
-├── pyproject.toml      # (Optional) build config
-├── langgraph.json      # LangGraph config
+├── .env                # Environment variables (e.g., OpenAI API key)
+├── requirements.txt    # Project dependencies
+├── pyproject.toml      # Optional build config
+├── langgraph.json      # LangGraph configuration (if used)
 ├── README.md           # This file
+├── app.py              # Streamlit interface
 ```
 
 ---
 
-## Requirements
+##  Requirements
 
-* Python >= 3.10
+- Python **≥ 3.10**
 
 Install dependencies:
 
@@ -68,7 +70,7 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-Set up your `.env` file (if using OpenAI, etc.):
+Set up your `.env` file with your OpenAI API key:
 
 ```env
 OPENAI_API_KEY=sk-...
@@ -76,31 +78,34 @@ OPENAI_API_KEY=sk-...
 
 ---
 
-## ▶Run the full flow
+## ▶ Running the Agent
 
-Run the full LLM workflow with a predefined test input:
+### ➤ Option 1: Run via terminal (end-to-end test)
 
 ```bash
 PYTHONPATH=src python -m tests.test_graph
-PYTHONPATH=src python -m streamlit run app.py
 ```
 
-You’ll see output like:
+### ➤ Option 2: Run with Streamlit UI
+
+```bash
+PYTHONPATH=src streamlit run app.py
+```
+
+Expected output (JSON format):
 
 ```json
 {
   "topic": "Advances in Quantum Computing",
   "trends": ["..."],
-  "notable_papers": [],
+  "notable_papers": ["..."],
   "open_questions": ["..."]
 }
 ```
 
 ---
 
-## Mermaid Graph Diagram
-
-
+##  LangGraph Execution Flow
 
 ```mermaid
 graph TD
@@ -110,16 +115,16 @@ graph TD
   D --> E[WriterNode:<br>summarize findings]
   C --> E
   E --> F[Final Output:<br>LiteratureSummary]
-
 ```
----
-
-## License
-
-MIT License
 
 ---
 
-## Author
+##  License
 
-Built by **Jorge Sosa** as part of a LangGraph lab project.
+MIT License.
+
+---
+
+##  Author
+
+Created by **Jorge Sosa** for the **ANLP2025** course, Lab 1.
