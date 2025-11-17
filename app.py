@@ -14,7 +14,9 @@ if str(SRC) not in sys.path:
 # IMPORTS NORMALES
 # -------------------------------------------------
 import asyncio
+
 import streamlit as st
+
 from langchain_core.messages import HumanMessage
 
 from react_agent.graph import graph
@@ -74,5 +76,4 @@ if st.button("Run Agent"):
     if result.get("formatted_text"):
         st.subheader("📝 Formatted Report")
         st.markdown(result["formatted_text"])
-else:
-    st.info("Escribe una pregunta (o deja la default) y haz clic en **Run Agent**.")
+
