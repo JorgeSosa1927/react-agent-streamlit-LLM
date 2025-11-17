@@ -48,7 +48,6 @@ async def planner_node(state: State, runtime: Runtime) -> Dict:
         raise ValueError(f"Planner failed to return valid JSON: {e}\nOutput: {result.content}")
 
 
-# OpenAlex node: search for papers
 async def openalex_node(state: State, runtime: Runtime) -> Dict:
     papers = fetch_papers_with_retry(state.plan)
 
@@ -58,30 +57,26 @@ async def openalex_node(state: State, runtime: Runtime) -> Dict:
         abstract = p.get('abstract', '') or p.get('abstract_inverted_index', '')
         if isinstance(abstract, dict):
             abstract = ' '.join(abstract.keys())
-        print(f"  Abstract: {abstract[:200]}...\n")  # Mostrar un resumen corto
+        print(f"  Abstract: {abstract[:200]}...\n")
 
+    # ❌ No devolvemos plan, ni messages
     return {
-        "papers": papers,
-        "plan": state.plan,
-        "messages": state.messages
+        "papers": papers
     }
 
-# Optional node: fetch author statistics
+
 async def author_stats_node(state: State, runtime: Runtime) -> Dict:
     # Si el planner decidió que no hace falta, no hacemos nada
     if not state.plan or not state.plan.need_author_stats:
         return {
-            "author_stats": None,
-            "plan": state.plan,
-            "messages": state.messages,
+            "author_stats": None
         }
 
     stats = fetch_author_stats(state.plan)
     return {
-        "author_stats": stats,
-        "plan": state.plan,
-        "messages": state.messages,
+        "author_stats": stats
     }
+
 
 # Writer node: summarize everything
 async def writer_node(state: State, runtime: Runtime) -> Dict:
