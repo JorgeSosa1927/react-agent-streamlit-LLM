@@ -51,9 +51,10 @@ st.set_page_config(page_title="Literature Review Assistant", layout="wide")
 st.title("📚 Literature Review Assistant")
 
 st.markdown(
-    "Este demo usa LangGraph + LangChain para hacer un pequeño flujo de "
-    "literature review (planner → tools → writer → formatter)."
+    "This demo uses LangGraph + LangChain to create a small literature review "
+    "workflow (planner -> tools -> writer -> formatter)."
 )
+
 
 default_query = "Give me a summary of recent research on quantum computing."
 user_query = st.text_area("User query:", value=default_query, height=80)
