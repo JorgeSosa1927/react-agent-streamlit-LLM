@@ -5,35 +5,43 @@ It implements a modular, multi-step LLM agent using **LangGraph** and **LangChai
 
 ---
 
-##  What it does
+## 📌 What it does
 
 Given a user query like:
 
 > “Give me a short overview of recent work on quantum computing.”
 
-The system performs the following steps:
+the system:
 
-1. Extracts a structured research plan.
-2. Searches for recent papers using the OpenAlex API.
-3. Optionally analyzes author statistics.
-4. Summarizes the findings using a Large Language Model (LLM).
+1. Extracts a **structured research plan** (keywords, year filter, need for author stats).
+2. Searches for **recent papers** using the OpenAlex API.
+3. Optionally analyzes **author statistics** (mocked tool).
+4. Summarizes the findings using a **Large Language Model (LLM)**.
+5. Produces both:
+   - A **JSON summary** (`LiteratureSummary`).
+   - A **formatted natural-language report** (via a Formatter LLM).
 
-All results are returned as **structured JSON**, and a formatted version is shown in the Streamlit UI.
+All intermediate steps use **Pydantic models** as data contracts.
 
 ---
 
-##  Features
+## ✨ Features
 
-- ✅ ReAct pattern (reason → act → observe)
-- ✅ LLM agents with clear modular roles (Planner, Writer, Formatter)
-- ✅ LangGraph graph structure with conditional routing
-- ✅ Retry logic for external API calls (OpenAlex)
+- ✅ ReAct-style pattern (reason → act → observe → reason again)
+- ✅ LLM agents with clear roles:
+  - **Planner** (builds `LiteraturePlan`)
+  - **Writer** (builds `LiterureSummary`)
+  - **Formatter** (converts JSON summary to a human-readable paragraph)
+- ✅ LangGraph `StateGraph` with:
+  - Parallel tool branches (`openalex` + `author_stats`)
+  - State merging before the writer node
+- ✅ Retry logic (`tenacity`) for external API calls to OpenAlex
 - ✅ Pydantic models for strict input/output validation
 - ✅ Streamlit UI for interactive exploration
 
 ---
 
-##  Project Structure
+## 🗂 Project Structure
 
 ```text
 anlp2025-lab1-jorge-sosa/
@@ -60,14 +68,16 @@ anlp2025-lab1-jorge-sosa/
 
 ---
 
-##  Requirements
+## 📦 Requirements
 
 - Python **≥ 3.10**
 
-Install dependencies:
+Create a virtual environment and install dependencies:
 
 ```bash
-pip install -r requirements.txt
+python -m venv .venv
+source .venv/bin/activate          # On Windows: .venv\Scripts\activate
+python -m pip install -r requirements.txt
 ```
 
 Set up your `.env` file with your OpenAI API key:
@@ -86,13 +96,30 @@ OPENAI_API_KEY=sk-...
 PYTHONPATH=src python -m tests.test_graph
 ```
 
+This will:
+
+- Run the LangGraph workflow on a sample query
+- Print:
+  - The extracted `LiteraturePlan`
+  - The JSON `LiteratureSummary`
+  - The final formatted report
+
 ### ➤ Option 2: Run with Streamlit UI
 
 ```bash
-PYTHONPATH=src streamlit run app.py
+python -m streamlit run app.py
 ```
 
-Expected output (JSON format):
+Then open the URL shown in the terminal (typically `http://localhost:8501`) and:
+
+1. Type a query (e.g. *“Give me a short overview of recent work on quantum computing.”*).
+2. Click **Run Agent**.
+3. Inspect:
+   - The extracted research plan (Pydantic `LiteraturePlan`).
+   - The JSON summary (`LiteratureSummary`).
+   - The final formatted paragraph.
+
+Example of JSON summary:
 
 ```json
 {
@@ -105,26 +132,43 @@ Expected output (JSON format):
 
 ---
 
-##  LangGraph Execution Flow
+## 🧠 LangGraph Execution Flow
 
 ```mermaid
 graph TD
-  A[PlannerNode:<br>generate LiteraturePlan] --> B{need_author_stats?}
-  B -- Yes --> C[AuthorStatsNode:<br>mocked author stats]
-  B --> D[OpenAlexNode:<br>fetch real papers - retry]
-  D --> E[WriterNode:<br>summarize findings]
-  C --> E
-  E --> F[Final Output:<br>LiteratureSummary]
+  A[Planner Node<br/>(LLM → LiteraturePlan)] --> B[OpenAlex Node<br/>(fetch_papers_with_retry)]
+  A --> C[AuthorStats Node<br/>(fetch_author_stats or None)]
+
+  B --> D[Writer Node<br/>(LLM → LiteratureSummary)]
+  C --> D
+
+  D --> E[Formatter Node<br/>(LLM → formatted text)]
 ```
+
+- **Planner**: reasons about the query and decides:
+  - Which keywords to use
+  - From which year to search
+  - Whether author stats are needed (`need_author_stats`)
+- **OpenAlex & AuthorStats**:
+  - Run in **parallel**, since they do not depend on each other.
+  - Their outputs are merged into the shared state before calling the writer.
+- **Writer**:
+  - Reads `plan`, `papers` and `author_stats`
+  - Produces a structured `LiteratureSummary` (Pydantic)
+- **Formatter**:
+  - Converts the JSON summary into a human-readable paragraph.
 
 ---
 
-##  License
+## 🧾 License
 
 MIT License.
 
 ---
 
-##  Author
+## 👤 Author
 
 Created by **Jorge Sosa** for the **ANLP2025** course, Lab 1.
+
+
+
