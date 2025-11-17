@@ -15,7 +15,6 @@ def _reconstruct_abstract(inverted_index: dict) -> str:
 
 
 
-@retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
 def fetch_papers_openalex(plan: LiteraturePlan) -> list[dict]:
     url = "https://api.openalex.org/works"
     search_query = " OR ".join(plan.keywords)  # ✅ más flexible
