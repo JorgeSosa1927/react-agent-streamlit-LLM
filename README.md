@@ -136,13 +136,13 @@ Example of JSON summary:
 
 ```mermaid
 graph TD
-  A[Planner Node<br/>(LLM → LiteraturePlan)] --> B[OpenAlex Node<br/>(fetch_papers_with_retry)]
-  A --> C[AuthorStats Node<br/>(fetch_author_stats or None)]
+  A["Planner Node (LLM -> LiteraturePlan)"] --> B["OpenAlex Node (fetch_papers_with_retry)"]
+  A --> C["AuthorStats Node (fetch_author_stats or None)"]
 
-  B --> D[Writer Node<br/>(LLM → LiteratureSummary)]
+  B --> D["Writer Node (LLM -> LiteratureSummary)"]
   C --> D
 
-  D --> E[Formatter Node<br/>(LLM → formatted text)]
+  D --> E["Formatter Node (LLM -> formatted text)"]
 ```
 
 - **Planner**: reasons about the query and decides:
