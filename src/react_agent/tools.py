@@ -15,7 +15,6 @@ def _reconstruct_abstract(inverted_index: dict) -> str:
 
 
 
-
 @retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
 def fetch_papers_openalex(plan: LiteraturePlan) -> list[dict]:
     url = "https://api.openalex.org/works"
@@ -56,13 +55,6 @@ def fetch_papers_openalex(plan: LiteraturePlan) -> list[dict]:
             "url": item.get("id")
         }
         results.append(paper_info)
-
-    # Optional debug print
-    print("\n🔎 Retrieved Papers:")
-    for p in results:
-        print(f"- {p['title']} ({p['year']})")
-        print(f"  Authors: {', '.join(p['authors'])}")
-        print(f"  Abstract: {p['abstract'][:200]}...\n")
 
     return results
 
