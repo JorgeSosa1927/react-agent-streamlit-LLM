@@ -66,6 +66,17 @@ async def openalex_node(state: State, runtime: Runtime) -> Dict:
         "messages": state.messages
     }
 
+# Optional node: fetch author statistics
+async def author_stats_node(state: State, runtime: Runtime) -> Dict:
+    stats = fetch_author_stats(state.plan)
+    return {
+        "author_stats": stats,
+        "plan": state.plan,
+        "papers": state.papers,
+        "messages": state.messages
+    }
+
+
 # Writer node: summarize everything
 async def writer_node(state: State, runtime: Runtime) -> Dict:
     model = load_chat_model(runtime.context)
