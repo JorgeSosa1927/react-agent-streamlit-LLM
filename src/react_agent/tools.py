@@ -13,10 +13,13 @@ def _reconstruct_abstract(inverted_index: dict) -> str:
     return " ".join(word for _, word in sorted(position_map.items()))
 
 
+
+
+
 @retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
 def fetch_papers_openalex(plan: LiteraturePlan) -> list[dict]:
     url = "https://api.openalex.org/works"
-    search_query = " ".join(plan.keywords)
+    search_query = " OR ".join(plan.keywords)  # ✅ más flexible
 
     params = {
         "filter": f"title.search:{search_query},publication_year:>{plan.min_year}",
@@ -62,6 +65,7 @@ def fetch_papers_openalex(plan: LiteraturePlan) -> list[dict]:
         print(f"  Abstract: {p['abstract'][:200]}...\n")
 
     return results
+
 
 
 def fetch_author_stats(plan: LiteraturePlan) -> dict:

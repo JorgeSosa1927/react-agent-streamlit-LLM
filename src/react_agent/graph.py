@@ -52,7 +52,7 @@ async def planner_node(state: State, runtime: Runtime) -> Dict:
 async def openalex_node(state: State, runtime: Runtime) -> Dict:
     papers = fetch_papers_with_retry(state.plan)
 
-    print("\n📄 Retrieved Papers:")
+    print("\n Retrieved Papers:")
     for p in papers:
         print(f"- {p.get('title')}")
         abstract = p.get('abstract', '') or p.get('abstract_inverted_index', '')
