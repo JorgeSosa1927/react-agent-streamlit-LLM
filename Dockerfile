@@ -9,8 +9,6 @@ RUN apt-get update && apt-get install -y \
 # Establece el directorio de trabajo
 WORKDIR /app
 
-# Copia todo el código del proyecto al contenedor
-COPY . .
 
 # Instala dependencias de Python
 RUN pip install --upgrade pip

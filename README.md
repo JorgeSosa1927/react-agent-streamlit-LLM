@@ -82,6 +82,7 @@ Run the full LLM workflow with a predefined test input:
 
 ```bash
 PYTHONPATH=src python -m tests.test_graph
+PYTHONPATH=src python -m streamlit run app.py
 ```
 
 You’ll see output like:

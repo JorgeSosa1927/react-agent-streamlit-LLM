@@ -6,7 +6,7 @@ from langgraph.graph import add_messages
 from langgraph.managed import IsLastStep
 from typing_extensions import Annotated
 
-from react_agent.models import LiteraturePlan, LiteratureSummary  # 👈 IMPORTAR TAMBIÉN ESTA
+from react_agent.models import LiteraturePlan, LiteratureSummary  # IMPORTAR TAMBIÉN ESTA
 
 @dataclass
 class InputState:

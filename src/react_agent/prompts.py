@@ -34,7 +34,8 @@ Guidelines:
 - Identify 2–3 papers that are especially impactful or representative. Use their titles in 'notable_papers'.
 - Include 4–6 trends and 4–6 open questions based on recurring themes.
 
-Respond ONLY with a valid JSON object matching this schema. No extra explanation.
+Respond ONLY with a valid JSON object matching this schema.
+The output MUST be valid JSON: no trailing commas, no quotes around keys, and no extra explanation before or after the JSON.
 """
 
 
