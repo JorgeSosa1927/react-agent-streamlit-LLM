@@ -1,18 +1,15 @@
 import sys
 from pathlib import Path
 
-# -------------------------------------------------
-# AÑADIR src/ AL PYTHONPATH PARA QUE FUNCIONE REACT_AGENT
-# -------------------------------------------------
+
+
 ROOT = Path(__file__).resolve().parent          # carpeta del proyecto
 SRC = ROOT / "src"                              # carpeta src/
 
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-# -------------------------------------------------
-# IMPORTS NORMALES
-# -------------------------------------------------
+
 import asyncio
 
 import streamlit as st
@@ -24,9 +21,6 @@ from react_agent.state import InputState
 from react_agent.context import Context
 
 
-# -------------------------------------------------
-# FUNCIÓN ASÍNCRONA QUE EJECUTA EL GRAFO
-# -------------------------------------------------
 async def run_graph_async(query: str):
     input_state = InputState(
         messages=[HumanMessage(content=query)]
