@@ -24,6 +24,7 @@ class AuthorStats(BaseModel):
 
 # Resultado final del Writer Node
 class LiteratureSummary(BaseModel):
+    topic: str
     trends: List[str]
     notable_papers: List[str]
     open_questions: List[str]

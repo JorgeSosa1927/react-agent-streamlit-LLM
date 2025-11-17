@@ -68,14 +68,20 @@ async def openalex_node(state: State, runtime: Runtime) -> Dict:
 
 # Optional node: fetch author statistics
 async def author_stats_node(state: State, runtime: Runtime) -> Dict:
+    # Si el planner decidió que no hace falta, no hacemos nada
+    if not state.plan or not state.plan.need_author_stats:
+        return {
+            "author_stats": None,
+            "plan": state.plan,
+            "messages": state.messages,
+        }
+
     stats = fetch_author_stats(state.plan)
     return {
         "author_stats": stats,
         "plan": state.plan,
-        "papers": state.papers,
-        "messages": state.messages
+        "messages": state.messages,
     }
-
 
 # Writer node: summarize everything
 async def writer_node(state: State, runtime: Runtime) -> Dict:
@@ -133,21 +139,19 @@ builder.add_node("planner", planner_node)
 builder.add_node("openalex", openalex_node)
 builder.add_node("author_stats", author_stats_node)
 builder.add_node("writer", writer_node)
-builder.add_node("formatter", formatter_node)  # NEW
+builder.add_node("formatter", formatter_node)
 
 builder.set_entry_point("planner")
 
-# Conditional logic: check if author stats are needed
-def route_from_openalex(state: State) -> str:
-    if state.plan and state.plan.need_author_stats:
-        return "author_stats"
-    else:
-        return "writer"
-
+# Desde el planner salen dos ramas en paralelo
 builder.add_edge("planner", "openalex")
-builder.add_conditional_edges("openalex", route_from_openalex)
+builder.add_edge("planner", "author_stats")
+
+# Ambas ramas convergen en el writer (join implícito de estado)
+builder.add_edge("openalex", "writer")
 builder.add_edge("author_stats", "writer")
-builder.add_edge("writer", "formatter")  # NEW
+
+#  Writer → Formatter
+builder.add_edge("writer", "formatter")
 
 graph = builder.compile()
-
