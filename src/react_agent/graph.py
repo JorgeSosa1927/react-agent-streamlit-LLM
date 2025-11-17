@@ -51,23 +51,20 @@ async def planner_node(state: State, runtime: Runtime) -> Dict:
 # OpenAlex node: search for papers
 async def openalex_node(state: State, runtime: Runtime) -> Dict:
     papers = fetch_papers_with_retry(state.plan)
+
+    print("\n📄 Retrieved Papers:")
+    for p in papers:
+        print(f"- {p.get('title')}")
+        abstract = p.get('abstract', '') or p.get('abstract_inverted_index', '')
+        if isinstance(abstract, dict):
+            abstract = ' '.join(abstract.keys())
+        print(f"  Abstract: {abstract[:200]}...\n")  # Mostrar un resumen corto
+
     return {
         "papers": papers,
         "plan": state.plan,
         "messages": state.messages
     }
-
-
-# Optional node: fetch author statistics
-async def author_stats_node(state: State, runtime: Runtime) -> Dict:
-    stats = fetch_author_stats(state.plan)
-    return {
-        "author_stats": stats,
-        "plan": state.plan,
-        "papers": state.papers,
-        "messages": state.messages
-    }
-
 
 # Writer node: summarize everything
 async def writer_node(state: State, runtime: Runtime) -> Dict:
