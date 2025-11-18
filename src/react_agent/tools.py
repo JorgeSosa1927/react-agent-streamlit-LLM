@@ -17,7 +17,7 @@ def _reconstruct_abstract(inverted_index: dict) -> str:
 
 def fetch_papers_openalex(plan: LiteraturePlan) -> list[dict]:
     url = "https://api.openalex.org/works"
-    search_query = " OR ".join(plan.keywords)  # ✅ más flexible
+    search_query = " OR ".join(plan.keywords)  #  más flexible
 
     params = {
         "filter": f"title.search:{search_query},publication_year:>{plan.min_year}",
