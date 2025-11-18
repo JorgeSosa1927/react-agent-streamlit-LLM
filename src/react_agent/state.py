@@ -19,6 +19,6 @@ class State(InputState):
     papers: Optional[list[dict]] = None
     summary: Optional[LiteratureSummary] = None  # AGREGALO ACÁ
     author_stats: Optional[dict] = None  # Nuevo campo para almacenar resultados
-    formatted_text: Optional[str] = None   # <---- ADD THIS
+    formatted_text: Optional[str] = None  
 
 

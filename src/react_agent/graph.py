@@ -59,7 +59,7 @@ async def openalex_node(state: State, runtime: Runtime) -> Dict:
             abstract = ' '.join(abstract.keys())
         print(f"  Abstract: {abstract[:200]}...\n")
 
-    # ❌ No devolvemos plan, ni messages
+    #  No devolvemos plan, ni messages
     return {
         "papers": papers
     }
