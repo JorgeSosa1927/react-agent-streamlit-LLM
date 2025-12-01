@@ -286,6 +286,165 @@ graph TD
 
 ---
 
+## 🧪 Experiments and Informal Evaluation
+
+We ran the MAS on several queries (at least five) to see how routing, tools, and memory behave in practice.
+
+### 1. Conceptual / Theoretical query (MAS / LLM agents)
+
+**Query**
+
+> “What is a multi-agent system in the context of LLMs?”
+
+**Agents / nodes activated (in order)**  
+`RouterAgent → TheoryAgent → FinalFormatter`
+
+**Tools used**  
+None.
+
+**Memory usage**  
+A record `{query, answer, type="theory"}` was appended to `memory`.
+
+**Notes**  
+Routing was correct and the explanation was clear and high-level, focused on MAS patterns and examples. No tool calls were needed.
+
+---
+
+### 2. Architecture / design query
+
+**Query**
+
+> “Describe the architecture of this MAS and how agents communicate.”
+
+**Agents / nodes activated**  
+`RouterAgent → TheoryAgent → FinalFormatter`
+
+**Tools used**  
+None.
+
+**Memory usage**  
+Another record was stored in `memory` with `type="architecture"`.
+
+**Notes**  
+The system correctly treated this as a theory/architecture question. The answer described `MASState`, the router + specialists pattern, and the flow of messages. Useful to understand the design.
+
+---
+
+### 3. Implementation / coding query
+
+**Query**
+
+> “How can I extend this code to add a new planning agent?”
+
+**Agents / nodes activated**  
+`RouterAgent → CodingAgent → FinalFormatter`
+
+**Tools used**  
+None.
+
+**Memory usage**  
+A record with `type="coding"` was appended, including a short plan for future reference.
+
+**Notes**  
+Routing switched to `CodingAgent`, which produced a step-by-step plan (new node, state fields, router update). This showed that the system can give concrete implementation advice distinct from theory explanations.
+
+---
+
+### 4. Study / productivity query
+
+**Query**
+
+> “Help me plan a study schedule for the ANLP2025 course.”
+
+**Agents / nodes activated**  
+`RouterAgent → CodingAgent → FinalFormatter`
+
+**Tools used**  
+None (only the LLM).
+
+**Memory usage**  
+The schedule and query were stored as a `memory` entry, which could later be reused to adapt future suggestions.
+
+**Notes**  
+The answer contained a structured weekly plan (topics, reading, coding time). Routing to `CodingAgent` worked well for this “planning / productivity” use case.
+
+---
+
+### 5. Research / literature query
+
+**Query**
+
+> “Give me a short overview of recent work on quantum computing.”
+
+**Agents / nodes activated**  
+`RouterAgent → ResearchAgent → FinalFormatter`
+
+**Tools used**  
+- `run_research_assistant` (wrapped Lab 1 literature graph).  
+  The underlying graph called OpenAlex (via the Lab 1 tools) and produced:
+  - a `LiteraturePlan`,
+  - a list of papers,
+  - a structured `LiteratureSummary`,
+  - and a formatted report.
+
+**Memory usage**  
+A `memory` entry stored the query, the final summary, and `type="research"`.
+
+**Notes**  
+This query exercised the full tool-calling path. Routing to `ResearchAgent` was correct, and the answer combined real paper metadata with a coherent summary.
+
+---
+
+### Informal evaluation
+
+Overall, the MAS behaved as expected:
+
+- **Routing quality** – RouterAgent consistently chose the right specialist:
+  - theory / architecture questions → `TheoryAgent`,
+  - coding / planning queries → `CodingAgent`,
+  - research queries → `ResearchAgent`.
+- **Tool usage** – External tool calls only happened inside `ResearchAgent`, via `run_research_assistant`, which reuses the Lab 1 graph and OpenAlex integration. This kept tool usage localized and easy to reason about.
+- **Memory** – The `memory` list collects lightweight records of `{query, answer, type}`. In the current version, memory is mainly *diagnostic* (for inspection and future extensions), but already provides a simple history that could be used by additional agents.
+- **Usefulness** – For the tested queries, answers were generally correct and practically useful: good conceptual explanations, clear architecture description, concrete coding guidance, and realistic study / research suggestions.
+
+Limitations observed:
+
+- The router is keyword-based and can be confused by very ambiguous queries.
+- Memory is not yet used to adapt responses across turns (no retrieval / personalization).
+- Only one external tool (literature review) is implemented; other tools (calendar, filesystem, etc.) could be added.
+
+---
+
+## 🪞 Reflection
+
+**What worked well**
+
+- The **router + specialists** pattern made the system easy to understand and extend. Each agent has a clear responsibility (research, theory, coding/planning, final formatting).
+- Reusing the **Lab 1 literature graph** inside `ResearchAgent` avoided code duplication and shows how a single specialized agent can be embedded into a larger MAS.
+- LangGraph’s **typed state** (`MASState`) simplified handoff and logging of which agents and tools were used.
+- The minimal **memory** mechanism is simple but already provides a basis for future personalization or history-aware behavior.
+
+**What was less successful / limitations**
+
+- The **RouterAgent** currently relies on simple heuristics and keywords; it can misclassify edge-case queries or multi-intent questions.
+- The system stores memory but **does not actively use it** to condition future answers (no retrieval, summarization, or long-term profile).
+- Tool calling is limited to a **single research tool**; other realistic tools (e.g. code execution, local notes search, scheduling) are not yet integrated.
+- There is no explicit error-handling agent; failures in tools or LLM calls are only partially surfaced.
+
+**Possible future extensions**
+
+- Replace the heuristic router with an **LLM-based classifier node** that considers the full query and the current memory.
+- Add a dedicated **PlanningAgent** that takes the current query and memory and proposes follow-up tasks or next steps (e.g. study checklist, coding TODO list).
+- Turn the `memory` list into a small **RAG-style store** (e.g. vector embeddings over notes) so that agents can retrieve relevant past context when answering.
+- Introduce additional tools, such as:
+  - a tiny local knowledge base of course notes,
+  - a code-execution tool for small Python snippets,
+  - or a file/notes search tool.
+- Add better **logging and visualization** of the MAS run (for example, recording each node transition and rendering it as a sequence diagram).
+
+This reflection shows that, while the current version already demonstrates MAS patterns, tool calling, and basic memory, there is a clear path to turning it into a more powerful and realistic assistant for study and productivity tasks.
+
+
 ## 🧾 License
 
 MIT License.
