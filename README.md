@@ -194,11 +194,14 @@ For the course setup, `Context` may also be configured to use a university-hoste
 
 ---
 
+
 ## ▶ Running the Code
 
 ### 🔹 Lab 1: Literature Review Agent (terminal)
 
-    PYTHONPATH=src python -m tests.test_graph
+```bash
+    PYTHONPATH=src python -m tests.test_graph 
+
 
 This will:
 
@@ -207,6 +210,8 @@ This will:
   - The extracted `LiteraturePlan`.
   - The JSON `LiteratureSummary`.
   - The final formatted report.
+
+ 
 
 ### 🔹 Lab 2: Multi-Agent System (MAS) demo
 
@@ -248,7 +253,7 @@ Example of JSON summary:
       "open_questions": ["..."]
     }
 
----
+  ```
 
 ## 🧠 LangGraph Execution Flow – Lab 1
 
