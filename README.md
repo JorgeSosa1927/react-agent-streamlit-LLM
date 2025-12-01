@@ -103,7 +103,7 @@ The architecture follows a **router + specialists** pattern:
 graph TD
   U[User query] --> R[RouterAgent]
 
-  R -->|research| Re[ResearchAgent<br/>(Lab 1 literature graph)]
+  R -->|research| Re[ResearchAgent (Lab 1 literature graph)]
   R -->|theory| T[TheoryAgent]
   R -->|coding/planning| C[CodingAgent]
 
@@ -270,7 +270,7 @@ graph TD
 graph TD
   U[User query] --> R[RouterAgent]
 
-  R -->|research| Re[ResearchAgent<br/>(Lab 1 literature graph)]
+  R -->|research| Re[ResearchAgent (Lab 1 literature graph)]
   R -->|theory| T[TheoryAgent]
   R -->|coding/planning| C[CodingAgent]
 
