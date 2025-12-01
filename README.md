@@ -1,5 +1,3 @@
-Te lo doy ya todo seguido; solo copia **TODO** lo de abajo y pégalo en tu `README.md`:
-
 # ANLP2025 – Literature Review Agent & Multi-Agent System (LangGraph + LangChain)
 
 This repository contains the code for **Lab 1** and **Lab 2** of the **ANLP2025** course.
