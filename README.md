@@ -266,19 +266,21 @@ graph TD
 ## 🧠 LangGraph Execution Flow – Lab 2 (MAS)
 
 ```mermaid
-
 graph TD
-  U[User query] --> R[RouterAgent]
+    U[User query] --> R[RouterAgent]
 
-  R -->|research| Re[ResearchAgent (Lab 1 literature graph)]
-  R -->|theory| T[TheoryAgent]
-  R -->|coding/planning| C[CodingAgent]
+    R -->|research| Re[ResearchAgent - Lab 1 literature graph]
+    R -->|theory| T[TheoryAgent]
+    R -->|coding/planning| C[CodingAgent]
 
-  Re --> F[FinalFormatter]
-  T --> F
-  C --> F
+    Re --> F[FinalFormatter]
+    T --> F
+    C --> F
 
-  F --> O[Final answer]
+    F --> O[Final answer]
+perl
+Copiar código
+
   ```
 
 
