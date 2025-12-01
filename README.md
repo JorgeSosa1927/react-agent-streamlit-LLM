@@ -170,6 +170,7 @@ react-agent-streamlit-LLM/
 ├── README.md               # This file
 ├── app.py                  # Streamlit interface (Lab 1 UI)
 └── ...
+```
 
 ## 📦 Requirements
 
