@@ -279,10 +279,7 @@ graph TD
     C --> F
 
     F --> O[Final answer]
-perl
-Copiar código
-
-  ```
+```
 
 
 
